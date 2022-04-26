@@ -4,6 +4,7 @@ const playerSpeed = 4;
 
 let groupEntity;
 let groupWall;
+let groupEnemy;
 
 let player;
 
@@ -12,17 +13,37 @@ function setup() {
 
     groupEntity = new Group();
     groupWall = new Group();
+    groupEnemy = new Group();
 
     player = createSprite(width/2,height/2,30,30);
+    player.friction = 0.1;
     groupEntity.add(player);
 
-    groupWall.add(createSprite(width/3,height/3,40,40));
+    for(var i = 0; i < 150; i++) {
+        const s = createSprite(random(width),random(height),40,40);
+        s.shapeColor = color('grey');
+        groupWall.add(s);
+    }
+
+    for(var i = 0; i < 15; i++) {
+        const rot = random(0,360);
+        const dist = random(width/4,width/2);
+        const s = createSprite(dist * cos(rot) + width / 2,dist * sin(rot) + height / 2,30,30);
+        s.friction = 0.1;
+        s.shapeColor = color('red');
+        groupEntity.add(s);
+        groupEnemy.add(s);
+    }
 }
 
 function draw() {
     background(220);
 
     groupEntity.collide(groupWall,(a,b) => a.displace(b));
+
+    groupEnemy.toArray().forEach((item) => {
+        item.attractionPoint(0.1,player.position.x,player.position.y);
+    });
 
 
     playerMovement();
@@ -31,6 +52,6 @@ function draw() {
 
 
 function playerMovement() {
-    player.velocity.x = keyDown('a') ? -playerSpeed : keyDown('d') ? playerSpeed : 0;
-    player.velocity.y = keyDown('w') ? -playerSpeed : keyDown('s') ? playerSpeed : 0;
+    player.velocity.x = keyDown('a') ? -playerSpeed : keyDown('d') ? playerSpeed : player.velocity.x;
+    player.velocity.y = keyDown('w') ? -playerSpeed : keyDown('s') ? playerSpeed : player.velocity.y;
 }
