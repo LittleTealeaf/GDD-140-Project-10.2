@@ -23,22 +23,26 @@ var player;
 function setup() {
     createCanvas(windowWidth - 20, windowHeight - 20);
 
+    //Create groups
     groupEntity = new Group();
     groupWall = new Group();
     groupEnemy = new Group();
     groupGoal = new Group();
 
+    //Create player
     player = createSprite(width / 2, height / 2, 15, 15);
     player.friction = 0.1;
     player.shapeColor = color('blue');
     groupEntity.add(player);
 
+    //Barriesr
     for (var i = 0; i < 150; i++) {
         const s = createSprite(random(width), random(height), 40, 40);
         s.shapeColor = color('grey');
         groupWall.add(s);
     }
 
+    //Enemies
     for (var i = 0; i < 15; i++) {
         const rot = random(0, 360);
         const dist = random(width / 4, width / 2);
@@ -49,6 +53,7 @@ function setup() {
         groupEnemy.add(s);
     }
 
+    //Goals
     for (var i = 0; i < pointsCount; i++) {
         const s = createSprite(random(width), random(height), 20, 20);
         s.shapeColor = color('green');
@@ -63,27 +68,37 @@ function draw() {
 
     textAlign(LEFT,TOP);
 
+    //only if game is playing
     if (lives > 0 && points < pointsToWin) {
+
+        //Entity collision with walls
         groupEntity.collide(groupWall, (a, b) => a.displace(b));
 
+        //Enemy tracking player
         groupEnemy.toArray().forEach((item) => {
             item.attractionPoint(0.1, player.position.x, player.position.y);
         });
 
+        //Enemy colliding player
         groupEnemy.collide(player, (a, b) => {
             lives--;
             a.remove();
         });
 
+        //Goals colliding player
         groupGoal.collide(player, (a, b) => {
             points++;
             a.remove()
         });
 
 
+        //Run player movements
         playerMovement();
+
+        //Sprites
         drawSprites();
 
+        //Render Scores
         textSize(30);
         text("Points: " + points + "/" + pointsToWin, 0, 0);
         text("Lives: " + lives, 0,30);
@@ -109,6 +124,9 @@ function draw() {
 
 
 function playerMovement() {
+
+    //Set velocity x based on inputs
     player.velocity.x = keyDown('a') ? -playerSpeed : keyDown('d') ? playerSpeed : player.velocity.x;
+    //Set velocity y based on inputs
     player.velocity.y = keyDown('w') ? -playerSpeed : keyDown('s') ? playerSpeed : player.velocity.y;
 }
