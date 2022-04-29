@@ -42,7 +42,7 @@ function setup() {
     for (var i = 0; i < 15; i++) {
         const rot = random(0, 360);
         const dist = random(width / 4, width / 2);
-        const s = createSprite(dist * cos(rot) + width / 2, dist * sin(rot) + height / 2, 30, 30);
+        const s = createSprite(dist * cos(rot) + width / 2, dist * sin(rot) + height / 2, 25, 25);
         s.friction = 0.1;
         s.shapeColor = color('red');
         groupEntity.add(s);
