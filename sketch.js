@@ -5,6 +5,7 @@ const playerSpeed = 4;
 let groupEntity;
 let groupWall;
 let groupEnemy;
+let groupGoal;
 
 let player;
 
@@ -14,8 +15,9 @@ function setup() {
     groupEntity = new Group();
     groupWall = new Group();
     groupEnemy = new Group();
+    groupGoal = new Group();
 
-    player = createSprite(width/2,height/2,30,30);
+    player = createSprite(width/2,height/2,15,15);
     player.friction = 0.1;
     groupEntity.add(player);
 
@@ -34,6 +36,14 @@ function setup() {
         groupEntity.add(s);
         groupEnemy.add(s);
     }
+
+    for(var i = 0; i < 5; i++) {
+        const s = createSprite(random(width),random(height),20,20);
+        s.shapeColor = color('green');
+        groupGoal.add(s);
+        groupEntity.add(s);
+    }
+
 }
 
 function draw() {
@@ -43,6 +53,10 @@ function draw() {
 
     groupEnemy.toArray().forEach((item) => {
         item.attractionPoint(0.1,player.position.x,player.position.y);
+    });
+
+    groupEnemy.collide(player, (a,b) => {
+        
     });
 
 
