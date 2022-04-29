@@ -36,7 +36,7 @@ function setup() {
     groupEntity.add(player);
 
     //Barriesr
-    for (var i = 0; i < 150; i++) {
+    for (var i = 0; i < 100; i++) {
         const s = createSprite(random(width), random(height), 40, 40);
         s.shapeColor = color('grey');
         groupWall.add(s);
